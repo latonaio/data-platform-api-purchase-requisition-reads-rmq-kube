@@ -1,7 +1,7 @@
 # data-platform-api-purchase-requisition-reads-rmq-kube
 
 data-platform-api-purchase-requisition-reads-rmq-kube は、周辺業務システム を データ連携基盤 と統合することを目的に、API で購買依頼データを取得するマイクロサービスです。  
-https://xxx.xxx.io/api/API_PURCHASE_REQUISITON_SRV/creates/
+https://xxx.xxx.io/api/API_PURCHASE_REQUISITON_SRV/reads/
 
 ## 動作環境
 

@@ -1,7 +1,7 @@
 package requests
 
 type Partner struct {
-	OrderID                 int     `json:"OrderID"`
+	PurchaseRequisition     int     `json:"PurchaseRequisition"`
 	PartnerFunction         string  `json:"PartnerFunction"`
 	BusinessPartner         int     `json:"BusinessPartner"`
 	BusinessPartnerFullName *string `json:"BusinessPartnerFullName"`

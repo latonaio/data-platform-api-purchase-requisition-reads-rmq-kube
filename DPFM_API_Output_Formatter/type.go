@@ -31,16 +31,24 @@ type Message struct {
 
 type Header struct {
 	PurchaseRequisition                int    `json:"PurchaseRequisition"`
+	PurchaseRequisitionDate            string `json:"PurchaseRequisitionDate"`
 	Buyer                              int    `json:"Buyer"`
 	PurchaseRequisitionType            string `json:"PurchaseRequisitionType"`
 	PlannedOrder                       *int   `json:"PlannedOrder"`
 	PlannedOrderItem                   *int   `json:"PlannedOrderItem"`
+	ProductionOrder                    *int   `json:"ProductionOrder"`
+	ProductionOrderItem                *int   `json:"ProductionOrderItem"`
 	PrecedingOrderID                   *int   `json:"PrecedingOrderID"`
 	PrecedingOrderItem                 *int   `json:"PrecedingOrderItem"`
 	Project                            *int   `json:"Project"`
 	WBSElement                         *int   `json:"WBSElement"`
+	HeaderOrderStatus				   string `json:"HeaderOrderStatus"`
+	HeaderCompleteOrderIsDefined	   *bool  `json:"HeaderCompleteOrderIsDefined"`
 	CreationDate                       string `json:"CreationDate"`
+	CreationTime                       string `json:"CreationTime"`
 	LastChangeDate                     string `json:"LastChangeDate"`
+	LastChangeTime                     string `json:"LastChangeTime"`
+	IsReleased                         *bool  `json:"IsReleased"`
 	IsCancelled                        *bool  `json:"IsCancelled"`
 	IsMarkedForDeletion                *bool  `json:"IsMarkedForDeletion"`
 }
@@ -50,8 +58,8 @@ type Item struct {
 	PurchaseRequisitionItem                       int      `json:"PurchaseRequisitionItem"`
 	PurchaseRequisitionItemCategory               string   `json:"PurchaseRequisitionItemCategory"`
 	SupplyChainRelationshipID                     *int     `json:"SupplyChainRelationshipID"`
-	SupplyChainRelationshipDeliveryID             int      `json:"SupplyChainRelationshipDeliveryID"`
-	SupplyChainRelationshipDeliveryPlantID        int      `json:"SupplyChainRelationshipDeliveryPlantID"`
+	SupplyChainRelationshipDeliveryID             *int     `json:"SupplyChainRelationshipDeliveryID"`
+	SupplyChainRelationshipDeliveryPlantID        *int     `json:"SupplyChainRelationshipDeliveryPlantID"`
 	SupplyChainRelationshipStockConfPlantID       *int     `json:"SupplyChainRelationshipStockConfPlantID"`
 	SupplyChainRelationshipProductionPlantID      *int     `json:"SupplyChainRelationshipProductionPlantID"`
 	Buyer                                         int      `json:"Buyer"`
@@ -64,30 +72,32 @@ type Item struct {
 	DeliverFromPlantStorageLocation               *string  `json:"DeliverFromPlantStorageLocation"`
 	Product                                       string   `json:"Product"`
 	ProductGroup                                  *string  `json:"ProductGroup"`
-	RequestedQuantity                             float32  `json:"RequestedQuantity"`
+	RequestedQuantityInBaseUnit                   float32  `json:"RequestedQuantityInBaseUnit"`
+	RequestedQuantityInDeliveryUnit               float32  `json:"RequestedQuantityInDeliveryUnit"`
 	BaseUnit                                      string   `json:"BaseUnit"`
-	DeliveryUnit                                  *string  `json:"DeliveryUnit"`
+	DeliveryUnit                                  string   `json:"DeliveryUnit"`
+	RequestedDeliveryDate                         string   `json:"RequestedDeliveryDate"`
 	PlannedOrder                                  *int     `json:"PlannedOrder"`
 	PlannedOrderItem                              *int     `json:"PlannedOrderItem"`
+	ProductionOrder                    			  *int     `json:"ProductionOrder"`
+	ProductionOrderItem                			  *int     `json:"ProductionOrderItem"`
 	PrecedingOrderID                              *int     `json:"PrecedingOrderID"`
 	PrecedingOrderItem                            *int     `json:"PrecedingOrderItem"`
 	FollowingOrderID                              *int     `json:"FollowingOrderID"`
 	FollowingOrderItem                            *int     `json:"FollowingOrderItem"`
 	Project                                       *int     `json:"Project"`
 	WBSElement                                    *int     `json:"WBSElement"`
-	PurchaseRequisitionReleaseStatus              *string  `json:"PurchaseRequisitionReleaseStatus"`
-	PurchaseRequisitionReleaseDate                *string  `json:"PurchaseRequisitionReleaseDate"`
 	PurchaseRequisitionItemText                   *string  `json:"PurchaseRequisitionItemText"`
 	PurchaseRequisitionItemTextByBuyer            *string  `json:"PurchaseRequisitionItemTextByBuyer"`
 	PurchaseRequisitionItemTextBySeller           *string  `json:"PurchaseRequisitionItemTextBySeller"`
-	PurchaseRequisitionPrice                      *float32 `json:"PurchaseRequisitionPrice"`
-	PurchaseRequisitionPriceQuantity              *int     `json:"PurchaseRequisitionPriceQuantity"`
+	PurchaseRequisitionItemPrice                  *float32 `json:"PurchaseRequisitionItemPrice"`
+	PurchaseRequisitionItemPriceQuantity          *int     `json:"PurchaseRequisitionItemPriceQuantity"`
 	ProductPlannedDeliveryDuration                *float32 `json:"ProductPlannedDeliveryDuration"`
 	ProductPlannedDeliveryDurationUnit            *int     `json:"ProductPlannedDeliveryDurationUnit"`
-	OrderedQuantity                               *float32 `json:"OrderedQuantity"`
-	DeliveryDate                                  *string  `json:"DeliveryDate"`
-	PurchaseRequisitionItemStatus                 *string  `json:"PurchaseRequisitionItemStatus"`
-	PurchaseRequisitionItemCurrency               *string  `json:"PurchaseRequisitionItemCurrency"`
+	OrderedQuantityInBaseUnit                     *float32 `json:"OrderedQuantityInBaseUnit"`
+	OrderedQuantityInDeliveryUnit                 *float32 `json:"OrderedQuantityInDeliveryUnit"`
+	ItemCompleteOrderIsDefined             		  *bool    `json:"ItemCompleteOrderIsDefined"`
+	TransactionCurrency               			  *string  `json:"TransactionCurrency"`
 	MRPArea                                       *string  `json:"MRPArea"`
 	MRPController                                 *string  `json:"MRPController"`
 	StockConfirmationBusinessPartner              *int     `json:"StockConfirmationBusinessPartner"`
@@ -96,8 +106,11 @@ type Item struct {
 	ProductionPlant                               *string  `json:"ProductionPlant"`
 	GLAccount                                     *string  `json:"GLAccount"`
 	ItemBlockStatus                               *bool    `json:"ItemBlockStatus"`
-	CreationDate                                  string   `json:"CreationDate"`
-	LastChangeTime                                string   `json:"LastChangeTime"`
-	IsCancelled                                   *int     `json:"IsCancelled"`
-	IsMarkedForDeletion                           *int     `json:"IsMarkedForDeletion"`
+	CreationDate                       			  string   `json:"CreationDate"`
+	CreationTime                       			  string   `json:"CreationTime"`
+	LastChangeDate                     			  string   `json:"LastChangeDate"`
+	LastChangeTime                     			  string   `json:"LastChangeTime"`
+	IsReleased                         			  *bool    `json:"IsReleased"`
+	IsCancelled                                   *bool    `json:"IsCancelled"`
+	IsMarkedForDeletion                           *bool    `json:"IsMarkedForDeletion"`
 }
