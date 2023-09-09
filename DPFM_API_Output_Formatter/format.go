@@ -218,3 +218,103 @@ func ConvertToItem(rows *sql.Rows) (*[]Item, error) {
 
 	return &item, nil
 }
+
+func ConvertToPartner(rows *sql.Rows) (*[]Partner, error) {
+	defer rows.Close()
+	partner := make([]Partner, 0)
+
+	i := 0
+	for rows.Next() {
+		i++
+		pm := &requests.Partner{}
+
+		err := rows.Scan(
+			&pm.PurchaseRequisition,
+			&pm.PartnerFunction,
+			&pm.BusinessPartner,
+			&pm.BusinessPartnerFullName,
+			&pm.BusinessPartnerName,
+			&pm.Organization,
+			&pm.Country,
+			&pm.Language,
+			&pm.Currency,
+			&pm.ExternalDocumentID,
+			&pm.AddressID,
+		)
+		if err != nil {
+			fmt.Printf("err = %+v \n", err)
+			return &partner, err
+		}
+
+		data := pm
+		partner = append(partner, Partner{
+			PurchaseRequisition:	 data.PurchaseRequisition,
+			PartnerFunction:         data.PartnerFunction,
+			BusinessPartner:         data.BusinessPartner,
+			BusinessPartnerFullName: data.BusinessPartnerFullName,
+			BusinessPartnerName:     data.BusinessPartnerName,
+			Organization:            data.Organization,
+			Country:                 data.Country,
+			Language:                data.Language,
+			Currency:                data.Currency,
+			ExternalDocumentID:      data.ExternalDocumentID,
+			AddressID:               data.AddressID,
+		})
+	}
+	if i == 0 {
+		fmt.Printf("DBに対象のレコードが存在しません。")
+		return &partner, nil
+	}
+
+	return &partner, nil
+}
+
+func ConvertToAddress(rows *sql.Rows) (*[]Address, error) {
+	defer rows.Close()
+	address := make([]Address, 0)
+
+	i := 0
+	for rows.Next() {
+		i++
+		pm := &requests.Address{}
+
+		err := rows.Scan(
+			&pm.PurchaseRequisition,
+			&pm.AddressID,
+			&pm.PostalCode,
+			&pm.LocalRegion,
+			&pm.Country,
+			&pm.District,
+			&pm.StreetName,
+			&pm.CityName,
+			&pm.Building,
+			&pm.Floor,
+			&pm.Room,
+		)
+		if err != nil {
+			fmt.Printf("err = %+v \n", err)
+			return &address, err
+		}
+
+		data := pm
+		address = append(address, Address{
+			PurchaseRequisition:	data.PurchaseRequisition,
+			AddressID:   			data.AddressID,
+			PostalCode:  			data.PostalCode,
+			LocalRegion: 			data.LocalRegion,
+			Country:     			data.Country,
+			District:    			data.District,
+			StreetName:  			data.StreetName,
+			CityName:    			data.CityName,
+			Building:    			data.Building,
+			Floor:       			data.Floor,
+			Room:        			data.Room,
+		})
+	}
+	if i == 0 {
+		fmt.Printf("DBに対象のレコードが存在しません。")
+		return &address, nil
+	}
+
+	return &address, nil
+}

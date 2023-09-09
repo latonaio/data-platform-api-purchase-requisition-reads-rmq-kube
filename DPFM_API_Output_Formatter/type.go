@@ -25,8 +25,10 @@ type SDC struct {
 }
 
 type Message struct {
-	Header *[]Header `json:"Header"`
-	Item   *[]Item   `json:"Item"`
+	Header	*[]Header			`json:"Header"`
+	Item	*[]Item				`json:"Item"`
+	Partner *[]Partner 			`json:"Partner"`
+	Address *[]HAddresseader	`json:"Address"`
 }
 
 type Header struct {
@@ -113,4 +115,32 @@ type Item struct {
 	IsReleased                         			  *bool    `json:"IsReleased"`
 	IsCancelled                                   *bool    `json:"IsCancelled"`
 	IsMarkedForDeletion                           *bool    `json:"IsMarkedForDeletion"`
+}
+
+type Partner struct {
+	PurchaseRequisition     int     `json:"PurchaseRequisition"`
+	PartnerFunction         string  `json:"PartnerFunction"`
+	BusinessPartner         int     `json:"BusinessPartner"`
+	BusinessPartnerFullName *string `json:"BusinessPartnerFullName"`
+	BusinessPartnerName     *string `json:"BusinessPartnerName"`
+	Organization            *string `json:"Organization"`
+	Country                 *string `json:"Country"`
+	Language                *string `json:"Language"`
+	Currency                *string `json:"Currency"`
+	ExternalDocumentID      *string `json:"ExternalDocumentID"`
+	AddressID               *int    `json:"AddressID"`
+}
+
+type Address struct {
+	PurchaseRequisition     int     `json:"OrderID"`
+	AddressID   			int     `json:"AddressID"`
+	PostalCode  			*string `json:"PostalCode"`
+	LocalRegion 			*string `json:"LocalRegion"`
+	Country     			*string `json:"Country"`
+	District    			*string `json:"District"`
+	StreetName  			*string `json:"StreetName"`
+	CityName    			*string `json:"CityName"`
+	Building    			*string `json:"Building"`
+	Floor       			*int    `json:"Floor"`
+	Room        			*int    `json:"Room"`
 }

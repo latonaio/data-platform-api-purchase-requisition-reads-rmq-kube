@@ -25,8 +25,8 @@ func (c *DPFMAPICaller) readSqlProcess(
 	) interface{} {
 		var header *[]dpfm_api_output_formatter.Header
 		var item *[]dpfm_api_output_formatter.Item
-//		var partner *[]dpfm_api_output_formatter.Partner
-//		var address *[]dpfm_api_output_formatter.Address
+		var partner *[]dpfm_api_output_formatter.Partner
+		var address *[]dpfm_api_output_formatter.Address
 		for _, fn := range accepter {
 			switch fn {
 			case "Header":
@@ -41,14 +41,14 @@ func (c *DPFMAPICaller) readSqlProcess(
 				func() {
 					item = c.Items(mtx, input, output, errs, log)
 				}()
-//			case "Partner":
-//				func() {
-//					partner = c.Partner(mtx, input, output, errs, log)
-//				}()
-//			case "Address":
-//				func() {
-//					address = c.Address(mtx, input, output, errs, log)
-//				}()
+			case "Partner":
+				func() {
+					partner = c.Partner(mtx, input, output, errs, log)
+				}()
+			case "Address":
+				func() {
+					address = c.Address(mtx, input, output, errs, log)
+				}()
 			default:
 			}
 		}
@@ -165,6 +165,84 @@ func (c *DPFMAPICaller) Items(
 	defer rows.Close()
 
 	data, err := dpfm_api_output_formatter.ConvertToItem(rows)
+	if err != nil {
+		*errs = append(*errs, err)
+		return nil
+	}
+
+	return data
+}
+
+func (c *DPFMAPICaller) Partner(
+	mtx *sync.Mutex,
+	input *dpfm_api_input_reader.SDC,
+	output *dpfm_api_output_formatter.SDC,
+	errs *[]error,
+	log *logger.Logger,
+) *[]dpfm_api_output_formatter.Partner {
+	var args []interface{}
+	purchaseRequisition := input.Header.PurchaseRequisition
+	partner := input.Header.Partner
+
+	cnt := 0
+	for _, v := range partner {
+		args = append(args, purchaseRequisition, v.PartnerFunction, v.BusinessPartner)
+		cnt++
+	}
+	repeat := strings.Repeat("(?,?,?),", cnt-1) + "(?,?,?)"
+
+	rows, err := c.db.Query(
+		`SELECT *
+		FROM DataPlatformMastersAndTransactionsMysqlKube.data_platform_purchase_requisition_partner_data
+		WHERE (PurchaseRequisition, PartnerFunction, BusinessPartner) IN ( `+repeat+` ) 
+		ORDER BY PurchaseRequisition DESC, BusinessPartner DESC, AddressID DESC;`, args...,
+	)
+	if err != nil {
+		*errs = append(*errs, err)
+		return nil
+	}
+	defer rows.Close()
+
+	data, err := dpfm_api_output_formatter.ConvertToPartner(rows)
+	if err != nil {
+		*errs = append(*errs, err)
+		return nil
+	}
+
+	return data
+}
+
+func (c *DPFMAPICaller) Address(
+	mtx *sync.Mutex,
+	input *dpfm_api_input_reader.SDC,
+	output *dpfm_api_output_formatter.SDC,
+	errs *[]error,
+	log *logger.Logger,
+) *[]dpfm_api_output_formatter.Address {
+	var args []interface{}
+	purchaseRequisition := input.Header.PurchaseRequisition
+	address := input.Header.Address
+
+	cnt := 0
+	for _, v := range address {
+		args = append(args, purchaseRequisition, v.AddressID)
+		cnt++
+	}
+	repeat := strings.Repeat("(?,?),", cnt-1) + "(?,?)"
+
+	rows, err := c.db.Query(
+		`SELECT *
+		FROM DataPlatformMastersAndTransactionsMysqlKube.data_platform_purchase_requisition_address_data
+		WHERE (PurchaseRequisition, AddressID) IN ( `+repeat+` ) 
+		ORDER BY PurchaseRequisition DESC, AddressID DESC;`, args...,
+	)
+	if err != nil {
+		*errs = append(*errs, err)
+		return nil
+	}
+	defer rows.Close()
+
+	data, err := dpfm_api_output_formatter.ConvertToAddress(rows)
 	if err != nil {
 		*errs = append(*errs, err)
 		return nil

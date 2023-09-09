@@ -18,9 +18,10 @@ APIサービス URL: https://xxx.xxx.io/api/API_PURCHASE_REQUISITON_SRV/reads/
 ## 本レポジトリ に 含まれる API名
 data-platform-api-purchase-requisition-reads-rmq-kube には、次の API をコールするためのリソースが含まれています。  
 
-* A_Header（データ連携基盤 購買依頼 - ヘッダデータ）
-* A_Item（データ連携基盤 購買依頼 - 明細データ）
- 
+* A_Header（購買依頼 - ヘッダデータ）
+* A_Item（購買依頼 - 明細データ）
+* A_Partner（購買依頼 - 取引先データ）
+* A_Address（購買依頼 - 住所データ） 
 
 ## API への 値入力条件 の 初期値
 data-platform-api-purchase-requisition-reads-rmq-kube において、API への値入力条件の初期値は、入力ファイルレイアウトの種別毎に、次の通りとなっています。  
@@ -75,7 +76,7 @@ func (c *DPFMAPICaller) AsyncReads(
 ## Output  
 本マイクロサービスでは、[golang-logging-library-for-data-platform](https://github.com/latonaio/golang-logging-library-for-data-platform) により、以下のようなデータがJSON形式で出力されます。  
 以下の sample.json の例は 購買依頼 の ヘッダデータ が取得された結果の JSON の例です。  
-以下の項目のうち、"ProductionPlantBusinessPartner" ～ "HeaderIsMarkedForDeletion" は、/DPFM_API_Output_Formatter/type.go 内 の Type Header {} による出力結果です。"cursor" ～ "time"は、golang-logging-library による 定型フォーマットの出力結果です。  
+以下の項目のうち、"PurchaseRequisition" ～ "IsMarkedForDeletion" は、/DPFM_API_Output_Formatter/type.go 内 の Type Header {} による出力結果です。"cursor" ～ "time"は、golang-logging-library による 定型フォーマットの出力結果です。  
 
 ```
 XXX
